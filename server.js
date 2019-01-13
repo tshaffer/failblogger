@@ -1,4 +1,4 @@
-https://www.npmjs.com/package/googleapis#oauth2-client
+// https://www.npmjs.com/package/googleapis#oauth2-client
 
 const {google} = require('googleapis');
 var http = require('http');
@@ -8,6 +8,7 @@ var path = require('path');
 // var mime = require('mime');
 var url = require('url');
 const querystring = require('querystring');
+const requestPromise = require('request-promise');
 
 var clientId = '1006826584050-4cad42jrlnu0bmophpuq7rt2nupslmmp.apps.googleusercontent.com';
 var clientSecret = 'N3XZuKHm04cMPz8yo6wcgmBw';
@@ -45,9 +46,19 @@ var server = http.createServer(function (request, response) {
       oauth2Client.setCredentials(tokens);
   
       console.log('access token');
-      console.log(tokens.tokens.access_token);
+      const access_token = tokens.tokens.access_token;
+      console.log(access_token);
 
-      console.log(google);
+      const apiEndpoint = 'https://photoslibrary.googleapis.com';
+
+      requestPromise.get(apiEndpoint + '/v1/albums', {
+        headers: {'Content-Type': 'application/json'},
+        // qs: parameters,
+        json: true,
+        auth: {'bearer': access_token},
+      }).then( (result) => {
+        console.log(result);
+      });
 
     });
   }
