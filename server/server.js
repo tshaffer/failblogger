@@ -60,6 +60,14 @@ var server = http.createServer(function (request, response) {
         console.log(result);
       });
 
+      fs.readFile('./client/authCallback.html', function (err, html) {
+        if (err) {
+          throw err;
+        }
+        response.writeHeader(200, { "Content-Type": "text/html" });
+        response.write(html);
+        response.end();
+      });
     });
   }
   else {
